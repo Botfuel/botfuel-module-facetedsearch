@@ -38,12 +38,8 @@ class SearchDialog extends PromptDialog {
     // build query from matched entities
     const query = Object.keys(matchedEntities).reduce((obj, key) => {
       const entity = matchedEntities[key];
-      if (
-        entity &&
-        entity.values.length > 0 &&
-        entity.values[0].value !== undefined
-      ) {
-        obj[key] = entity.values[0].value;
+      if (entity && entity.values.length > 0 && entity.values[0].value !== undefined) {
+        return Object.assign({ [key]: entity.values[0].value }, obj);
       }
       return obj;
     }, {});
@@ -56,13 +52,11 @@ class SearchDialog extends PromptDialog {
     candidates,
     parameters,
     previouslyMatchedEntities = {},
-    asking_entity = undefined,
   ) {
-    let { matchedEntities, missingEntities } = super.computeEntities(
+    let { matchedEntities, missingEntities } = super.computeEntities( // eslint-disable-line prefer-const
       candidates,
       parameters,
       previouslyMatchedEntities,
-      asking_entity,
     );
 
     const query = this.buildQueryFromMatchedEntities(matchedEntities);
@@ -119,13 +113,13 @@ class SearchDialog extends PromptDialog {
 
   async dialogWillDisplay(userMessage, dialogData) {
     logger.debug('dialogWillDisplay');
-    const nextQuestionFacet = this.nextQuestionFacet;
+    const { nextQuestionFacet } = this;
     const userId = userMessage.user;
-    await this.brain.conversationSet(
-      userId,
-      'asking_entity',
-      nextQuestionFacet,
-    );
+    // await this.brain.conversationSet(
+    //   userId,
+    //   'asking_entity',
+    //   nextQuestionFacet,
+    // );
 
     if (!nextQuestionFacet) {
       const foundData = this.db.getHits(this.query);

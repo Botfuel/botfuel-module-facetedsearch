@@ -1,4 +1,4 @@
-const { PlainFacetDb } = require('botfuel-dialog');
+const { PlainFacetDb } = require('botfuel-facetedsearch');
 
 const data = require('./data');
 

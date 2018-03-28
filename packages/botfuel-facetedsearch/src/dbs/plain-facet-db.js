@@ -36,10 +36,9 @@ class PlainFacetDb extends FacetDb {
     this.metadata = metadata; // filter, done
   }
 
-  static EQUAL = (value, param) => value === param;
-  static IN = (value, param) => param && param.includes(value);
-  static BETWEEN = (value, param) =>
-    param && value >= param[0] && value <= param[1];
+  static EQUAL(value, param) { return value === param; }
+  static IN(value, param) { return param && param.includes(value); }
+  static BETWEEN(value, param) { return param && value >= param[0] && value <= param[1]; }
 
   verify(query, row) {
     let result = true;

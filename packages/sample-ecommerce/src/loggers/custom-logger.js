@@ -57,6 +57,9 @@ module.exports = {
       CorpusExtractor: {
         disable: ['debug'],
       },
+      RegexExtractor: {
+        disable: ['debug'],
+      },
       Dialog: {
         disable: ['debug'],
       },
@@ -66,12 +69,12 @@ module.exports = {
       TextDialog: {
         disable: ['debug'],
       },
-      // PromptDialog: {
-      //   disable: ['debug'],
-      // },
-      // SearchDialog: {
-      //   disable: ['debug'],
-      //},
+      PromptDialog: {
+        disable: ['debug'],
+      },
+      SearchDialog: {
+        disable: ['debug'],
+      },
       FeedbackDialog: {
         disable: ['debug'],
       },

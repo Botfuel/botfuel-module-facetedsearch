@@ -7,5 +7,6 @@ module.exports = {
   botfuelModuleRoot: 'src',
   FacetDb,
   PlainFacetDb,
-
+  SearchDialog,
+  SearchView,
 };
