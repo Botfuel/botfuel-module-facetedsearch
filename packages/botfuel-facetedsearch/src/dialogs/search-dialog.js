@@ -94,13 +94,8 @@ class SearchDialog extends PromptDialog {
       this.query,
     ) || { facet: undefined, count: undefined };
 
-    const priorityList = this.getSortedParameterNames(
-      matchedEntities,
-      this.getParameters(parameters),
-      facet,
-    );
-    const nextQuestionFacet = priorityList[0];
-
+    const highPriorityMissingEntites = missingEntityNames.filter(key => missingEntities[key].priority && missingEntities[key].priority > 0);
+    const nextQuestionFacet = highPriorityMissingEntites.length > 0 ? highPriorityMissingEntites[0] : facet;
     logger.debug('computeNextQuestionFacet:', nextQuestionFacet);
     return nextQuestionFacet;
   }
@@ -115,11 +110,6 @@ class SearchDialog extends PromptDialog {
     logger.debug('dialogWillDisplay');
     const { nextQuestionFacet } = this;
     const userId = userMessage.user;
-    // await this.brain.conversationSet(
-    //   userId,
-    //   'asking_entity',
-    //   nextQuestionFacet,
-    // );
 
     if (!nextQuestionFacet) {
       const foundData = this.db.getHits(this.query);
