@@ -9,7 +9,7 @@
     "test": "jest --forceExit",
     "train": "lerna run train",
     "precommit": "lint-staged",
-    "start": "yarn bootstrap && cd packages/sample-ecommerce && yarn start botfuel-config.js"
+    "start": "cd packages/sample-ecommerce && yarn start botfuel-config.js"
   },
   "devDependencies": {
     "lerna": "^3.0.0-alpha.1"
