@@ -1,0 +1,82 @@
+0 silly argv { _: [ 'bootstrap' ],
+0 silly argv   help: false,
+0 silly argv   h: false,
+0 silly argv   version: false,
+0 silly argv   v: false,
+0 silly argv   'reject-cycles': undefined,
+0 silly argv   rejectCycles: undefined,
+0 silly argv   sort: undefined,
+0 silly argv   ci: false,
+0 silly argv   'ignore-scripts': undefined,
+0 silly argv   ignoreScripts: undefined,
+0 silly argv   private: true,
+0 silly argv   'include-filtered-dependencies': false,
+0 silly argv   includeFilteredDependencies: false,
+0 silly argv   lernaVersion: '3.0.0-beta.10',
+0 silly argv   '$0': '/Users/nguyentrongcanh/BotFuel/botfuel-facetedsearch/node_modules/.bin/lerna',
+0 silly argv   loglevel: undefined,
+0 silly argv   concurrency: undefined,
+0 silly argv   'max-buffer': undefined,
+0 silly argv   hoist: undefined,
+0 silly argv   nohoist: undefined,
+0 silly argv   mutex: undefined,
+0 silly argv   'npm-client': undefined,
+0 silly argv   registry: undefined,
+0 silly argv   scope: undefined,
+0 silly argv   ignore: undefined,
+0 silly argv   since: undefined }
+1 info version 3.0.0-beta.10
+2 verbose rootPath /Users/nguyentrongcanh/BotFuel/botfuel-facetedsearch
+3 silly batched [ PackageGraphNode {
+3 silly batched     name: 'botfuel-facetedsearch',
+3 silly batched     externalDependencies:
+3 silly batched      Map {
+3 silly batched        'babel-eslint' => [Object],
+3 silly batched        'babel-jest' => [Object],
+3 silly batched        'babel-plugin-transform-builtin-extend' => [Object],
+3 silly batched        'babel-plugin-transform-class-properties' => [Object],
+3 silly batched        'babel-preset-env' => [Object],
+3 silly batched        'babel-preset-stage-2' => [Object],
+3 silly batched        'eslint' => [Object],
+3 silly batched        'eslint-config-airbnb-base' => [Object],
+3 silly batched        'eslint-plugin-babel' => [Object],
+3 silly batched        'eslint-plugin-import' => [Object],
+3 silly batched        'eslint-plugin-jest' => [Object],
+3 silly batched        'jest' => [Object],
+3 silly batched        'botfuel-dialog' => [Object],
+3 silly batched        'lodash' => [Object] },
+3 silly batched     localDependencies: Map {},
+3 silly batched     localDependents: Map {} },
+3 silly batched   PackageGraphNode {
+3 silly batched     name: 'botfuel-facetedsearch-sample-ecommerce',
+3 silly batched     externalDependencies:
+3 silly batched      Map {
+3 silly batched        'eslint' => [Object],
+3 silly batched        'eslint-config-airbnb' => [Object],
+3 silly batched        'eslint-plugin-babel' => [Object],
+3 silly batched        'eslint-plugin-import' => [Object],
+3 silly batched        'eslint-plugin-jsx-a11y' => [Object],
+3 silly batched        'eslint-plugin-mocha' => [Object],
+3 silly batched        'eslint-plugin-node' => [Object],
+3 silly batched        'eslint-plugin-react' => [Object],
+3 silly batched        'botfuel-dialog' => [Object],
+3 silly batched        'botfuel-facetedsearch' => [Object] },
+3 silly batched     localDependencies: Map {},
+3 silly batched     localDependents: Map {} } ]
+4 silly npmConfig { registry: undefined,
+4 silly npmConfig   npmClient: 'yarn',
+4 silly npmConfig   npmClientArgs: undefined,
+4 silly npmConfig   mutex: 'network:42424' }
+5 info Bootstrapping 2 packages
+6 silly getExecOpts { cwd: '/Users/nguyentrongcanh/BotFuel/botfuel-facetedsearch' }
+7 silly npmInstall [ 'yarn',
+7 silly npmInstall   [ 'install', '--mutex', 'network:42424', '--non-interactive' ] ]
+8 error Error: Command failed: yarn install --mutex network:42424 --non-interactive
+8 error error An unexpected error occurred: "Couldn't find package \"botfuel-facetedsearch@latest\" required by \"botfuel-facetedsearch-sample-ecommerce@0.1.0\" on the \"npm\" registry.".
+8 error [1/4] Resolving packages...
+8 error info If you think this is a bug, please open a bug report with the information provided in "/Users/nguyentrongcanh/BotFuel/botfuel-facetedsearch/yarn-error.log".
+8 error info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
+8 error
+8 error     at makeError (/Users/nguyentrongcanh/BotFuel/botfuel-facetedsearch/node_modules/@lerna/child-process/node_modules/execa/index.js:169:9)
+8 error     at Promise.all.then.arr (/Users/nguyentrongcanh/BotFuel/botfuel-facetedsearch/node_modules/@lerna/child-process/node_modules/execa/index.js:274:16)
+8 error     at <anonymous>

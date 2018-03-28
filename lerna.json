@@ -1,0 +1,13 @@
+{
+  "lerna": "2.7.1",
+  "packages": [
+    "packages/*"
+  ],
+  "changelog": {
+    "repo": "botfuel-facetedsearch/botfuel-facetedsearch",
+    "cacheDir": ".changelog"
+  },
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "version": "4.2.0"
+}

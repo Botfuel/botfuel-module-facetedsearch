@@ -14,6 +14,7 @@
   "rules": {
     "class-methods-use-this": "off",
     "no-unused-vars":"off",
-    "max-len": 0
+    "max-len": 0,
+    "no-var":0
   }
 }

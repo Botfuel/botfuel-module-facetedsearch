@@ -7,6 +7,3 @@ In a SDK prompt dialog, the all the missing entities are asked. In a faceted sea
 - otherwise the next entity to be asked will be computed to narrow down the possible choices effectively. Irrelevant entities will be ignored (like values are not provided or take the same value for all rows).
 
 Detailed documentation [here](https://botfuel-docs-staging-pr-38.herokuapp.com/dialog/reference/dialogs/search-dialog/).
-
-
-
