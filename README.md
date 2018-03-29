@@ -13,7 +13,10 @@ Detailed documentation [here](https://botfuel-docs-staging-pr-38.herokuapp.com/d
 yarn install
 
 # unit-tests
-yarn test
+yarn unit-test
+
+# all tests including sample tests
+BOTFUEL_APP_TOKEN=<> BOTFUEL_APP_ID=<> BOTFUEL_APP_KEY=<> yarn test
 
 # run sample
 cd ./packages/sample-ecommerce
