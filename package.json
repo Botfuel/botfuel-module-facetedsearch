@@ -5,7 +5,7 @@
     "style": "lerna run style",
     "pretest": "yarn run bootstrap && yarn run train",
     "release": "yarn test && lerna run compile --scope botfuel-dialog && lerna publish --conventional-commits --changelog-preset=angular",
-    "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT jest packages/botfuel-dialog",
+    "unit-test": "BOTFUEL_APP_TOKEN=TEST_BOT jest packages/botfuel-facetedsearch",
     "test": "jest --forceExit",
     "train": "lerna run train",
     "precommit": "lint-staged",

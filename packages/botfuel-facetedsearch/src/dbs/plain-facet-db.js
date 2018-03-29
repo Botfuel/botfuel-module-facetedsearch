@@ -27,6 +27,10 @@ class PlainFacetDb extends FacetDb {
    * @constructor
    * @param {Object[]} data - the rows
    * @param {Object} metadata - object providing the filter function, the done condition
+   * metadata = {
+   *  filter: (query, row) => boolean
+   *  done: (query) => boolean
+   * }
    */
   constructor(data, metadata) {
     super();
@@ -40,17 +44,19 @@ class PlainFacetDb extends FacetDb {
   static IN(value, param) { return param && param.includes(value); }
   static BETWEEN(value, param) { return param && value >= param[0] && value <= param[1]; }
 
-  verify(query, row) {
-    let result = true;
-    _.forEach(Object.keys(query), (key) => {
-      if (!this.metadata[key](query[key], row[key])) {
-        result = false;
-        return false;
-      }
-      return true;
-    });
+  static DEFAULTFILTER(facetFilters) {
+    return (query, row) => {
+      let result = true;
+      _.forEach(Object.keys(query), (key) => {
+        if (!facetFilters[key](query[key], row[key])) {
+          result = false;
+          return false;
+        }
+        return true;
+      });
 
-    return result;
+      return result;
+    };
   }
 
   /**
@@ -65,7 +71,7 @@ class PlainFacetDb extends FacetDb {
       return this.data;
     }
 
-    return this.data.filter(row => this.verify(query, row));
+    return this.data.filter(row => this.metadata.filter(query, row));
   }
 
   /**

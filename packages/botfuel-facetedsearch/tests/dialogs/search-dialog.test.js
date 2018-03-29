@@ -39,8 +39,10 @@ describe('SearchDialog', () => {
     const db = new PlainFacetDb(
       [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
       {
-        f1: PlainFacetDb.EQUAL,
-        f2: PlainFacetDb.EQUAL,
+        filter: PlainFacetDb.DEFAULTFILTER({
+          f1: PlainFacetDb.EQUAL,
+          f2: PlainFacetDb.EQUAL,
+        }),
       },
     );
     const search = new SearchDialog(TEST_CONFIG, brain, {

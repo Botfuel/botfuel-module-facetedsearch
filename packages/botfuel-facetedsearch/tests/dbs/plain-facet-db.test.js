@@ -27,8 +27,10 @@ describe('Facet Db', () => {
           { f1: 4, f2: 2 },
         ],
         {
-          f1: PlainFacetDb.EQUAL,
-          f2: PlainFacetDb.EQUAL,
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
         },
       );
       expect(db.getHits({ f2: 2 })).toEqual([
@@ -49,8 +51,10 @@ describe('Facet Db', () => {
         ],
         {
           done: hits => hits.length < 3,
-          f1: PlainFacetDb.EQUAL,
-          f2: PlainFacetDb.EQUAL,
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
         },
       );
       expect(db.done({})).toBe(false);
@@ -66,8 +70,10 @@ describe('Facet Db', () => {
         ],
         {
           done: hits => hits.length < 3,
-          f1: PlainFacetDb.EQUAL,
-          f2: PlainFacetDb.EQUAL,
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
         },
       );
       expect(db.done({ f2: 2 })).toBe(true);
@@ -76,12 +82,20 @@ describe('Facet Db', () => {
 
   describe('getDeducedFacets', () => {
     test('should return the deduced facets when all db', async () => {
-      const db = new PlainFacetDb([
-        { f1: 1, f2: 1 },
-        { f1: 2, f2: 1 },
-        { f1: 3, f2: 2 },
-        { f1: 4, f2: 2 },
-      ]);
+      const db = new PlainFacetDb(
+        [
+          { f1: 1, f2: 1 },
+          { f1: 2, f2: 1 },
+          { f1: 3, f2: 2 },
+          { f1: 4, f2: 2 },
+        ],
+        {
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
+        },
+      );
       expect(db.getDeducedFacets(['f1', 'f2'], {})).toEqual([]);
     });
 
@@ -94,8 +108,10 @@ describe('Facet Db', () => {
           { f1: 4, f2: 2 },
         ],
         {
-          f1: PlainFacetDb.EQUAL,
-          f2: PlainFacetDb.EQUAL,
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
         },
       );
       expect(db.getDeducedFacets(['f1', 'f2'], { f2: 1 })).toEqual(['f2']);
@@ -110,8 +126,10 @@ describe('Facet Db', () => {
           { f1: 4, f2: 2 },
         ],
         {
-          f1: PlainFacetDb.EQUAL,
-          f2: PlainFacetDb.EQUAL,
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
         },
       );
       expect(db.getDeducedFacets(['f1', 'f2'], { f2: 100 })).toEqual([
