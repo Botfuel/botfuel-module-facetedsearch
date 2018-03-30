@@ -49,31 +49,47 @@ class SearchDialog extends PromptDialog {
   }
 
   /**
-   * Compute question entities to be sent to the view
-   * Missing entities with priority > 0 are put first, then comes the one computed by the strategy
-   * @param {Object} matchedEntities matched entites returned from PromptDialog
-   * @param {Object} missingEntities missing entites returned from PromptDialog
-   * @returns {Map} quetion entities (in sorted order)
+   * Computes matched and missing entities.
+   * @param {Array.<Object[]>} candidates - array of raw entities given by the extractor.
+   * @param {Object} dialogEntities - map of entities expected by the dialog: {
+   * @param {Object} previouslyMatchedEntities - previouslyMatchedEntities
+   * @param {String} previousQuestionEntity - previous question entity
+   * @returns {Object} object containing missingEntities and matchedEntities
    */
-  async computeQuestionEntities(matchedEntities, missingEntities) {
-    this.query = this.buildQueryFromMatchedEntities(matchedEntities);
-    const facets = Object.keys(missingEntities);
-    const deducedFacets = this.db.getDeducedFacets(facets, this.query);
-    const reducedMissingEntities = _.omit(missingEntities, deducedFacets);
+  async computeEntities(
+    candidates,
+    dialogEntities,
+    previouslyMatchedEntities = {},
+    previousQuestionEntity = undefined,
+  ) {
+    const { matchedEntities, missingEntities } = await super.computeEntities(
+      candidates,
+      dialogEntities,
+      previouslyMatchedEntities,
+      previousQuestionEntity,
+    );
 
-    if (Object.keys(reducedMissingEntities).length === 0) {
-      return new Map();
+    this.query = this.buildQueryFromMatchedEntities(matchedEntities);
+    const facets = Array.from(missingEntities.keys());
+    const deducedFacets = this.db.getDeducedFacets(facets, this.query);
+    const reducedMissingEntities = new Map(missingEntities);
+    _.forEach(deducedFacets, (facet) => {
+      reducedMissingEntities.delete(facet);
+    });
+
+    if (reducedMissingEntities.size === 0) {
+      return { matchedEntities, missingEntities: new Map() };
     }
 
     const { facet } = this.db.selectFacetMinMaxStrategy(
-      Object.keys(reducedMissingEntities),
+      Array.from(reducedMissingEntities.keys()),
       this.query,
     );
 
     // Missing entities with priority > 0 are put first, then comes the one computed by the strategy
-    const sortedEntityNames = Object.keys(reducedMissingEntities).sort((a, b) => {
-      const entityA = missingEntities[a];
-      const entityB = missingEntities[b];
+    const newMissingEntities = new Map([...reducedMissingEntities.entries()].sort((a, b) => {
+      const entityA = a[1];
+      const entityB = b[1];
 
       if (entityA.priority === entityB.priority && facet) {
         if (facet === a) {
@@ -86,9 +102,12 @@ class SearchDialog extends PromptDialog {
       }
 
       return entityB.priority - entityA.priority;
-    });
+    }));
 
-    return new Map(sortedEntityNames.map(key => [key, reducedMissingEntities[key]]));
+    return {
+      matchedEntities,
+      missingEntities: newMissingEntities,
+    };
   }
 
   /**

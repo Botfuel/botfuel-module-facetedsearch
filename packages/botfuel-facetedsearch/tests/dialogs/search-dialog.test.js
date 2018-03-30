@@ -33,7 +33,7 @@ const BRAIN_CONFIG = {
 };
 
 describe('SearchDialog', () => {
-  describe('computeQuestionEntities', () => {
+  describe('computeEntities', () => {
     const brain = new MemoryBrain(BRAIN_CONFIG);
     const db = new PlainFacetDb(
       [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
@@ -51,51 +51,36 @@ describe('SearchDialog', () => {
     });
 
     test('return no question entity when no need to ask more', async () => {
-      const matchedEntities = {
-        f1: {
+      const candidates = [
+        {
           dim: 'number',
           values: [{ value: 1, type: 'integer' }],
         },
-      };
-      const missingEntities = {
+      ];
+
+      const dialogEntities = {
+        f1: {
+          dim: 'number',
+        },
         f2: {
           dim: 'number',
         },
       };
 
-      const questionEntities = await search.computeQuestionEntities(
-        matchedEntities,
-        search.updateEntityWithDefaultValues(missingEntities),
+      const { missingEntities } = await search.computeEntities(
+        candidates,
+        dialogEntities,
         {},
         'f1',
       );
 
-      expect(questionEntities.size).toEqual(0);
+      expect(missingEntities.size).toEqual(0);
     });
 
-    // test('next question facet', () => {
-    //   const messageEntities = [];
-    //   const expectedEntities = {
-    //     f1: {
-    //       dim: 'number',
-    //     },
-    //     f2: {
-    //       dim: 'number',
-    //     },
-    //   };
-    //   const { matchedEntities, missingEntities } = search.computeEntities(
-    //     messageEntities,
-    //     search.updateEntityWithDefaultValues(expectedEntities),
-    //     {},
-    //   );
-
-    //   expect(Object.keys(missingEntities)).toHaveLength(2);
-    //   expect(search.nextQuestionFacet).toBe('f1');
-    // });
-
     test('questionEntities should ask priotized entity first', async () => {
-      const messageEntities = {};
-      const missingEntities = {
+      const candidates = [];
+
+      const dialogEntities = {
         f1: {
           dim: 'number',
         },
@@ -104,14 +89,11 @@ describe('SearchDialog', () => {
           priority: 1,
         },
       };
-      const questionEntities = await search.computeQuestionEntities(
-        messageEntities,
-        search.updateEntityWithDefaultValues(missingEntities),
-        {},
-      );
 
-      expect(questionEntities.size).toEqual(2);
-      expect(Array.from(questionEntities.keys())).toEqual(['f2', 'f1']);
+      const { missingEntities } = await search.computeEntities(candidates, dialogEntities, {});
+
+      expect(missingEntities.size).toEqual(2);
+      expect(Array.from(missingEntities.keys())).toEqual(['f2', 'f1']);
     });
   });
 });
