@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/* eslint no-unused-vars:off */
 
 const _ = require('lodash');
 const { Logger, MissingImplementationError } = require('botfuel-dialog');
@@ -51,7 +52,7 @@ class FacetDb {
   }
 
   /**
-   * In the data returned by query, for each facet, count the number of row for each value taken by that facet
+   * In the data returned by query, for each facet, count the number of row for each facet value
    * @param {String[]} facets - an array of facets we want to get the value count
    * @param {Object[]} query - the current query for which we want facet information
    * @returns {Object[]} - an object mapping each facet to an array of {value, count}
@@ -64,7 +65,7 @@ class FacetDb {
   /**
    * Returns the deduced facets (when facetCount = 0 or 1)
    * @param {String[]} facets - an array of facets
-   * @param {Object[]} query - the current query for which we want facet information
+   * @param {Object[]} query - the current query for which we want facets information
    * @returns {String[]} the answered facets.
    */
   getDeducedFacets(facets, query) {
@@ -77,10 +78,9 @@ class FacetDb {
    * MinMax strategy to get next question
    * Get the facet which has the minimal possible hits size if query on it.
    * @param {String[]} facets - an array of facets
-   * @param {Object[]} hits - the hits, defaults to the entire db
+   * @param {Object[]} query - the current query for which we want facets information
    * @returns {String} the answered facet.
    */
-
   selectFacetMinMaxStrategy(facets, query) {
     logger.debug('selectFacetMinMaxStrategy', facets);
 

@@ -13,14 +13,14 @@ const ColorFilter = (value, param) =>
 class ArticleDb extends PlainFacetDb {
   constructor() {
     super(data, {
-        filter: PlainFacetDb.DEFAULTFILTER({
-          type: PlainFacetDb.EQUAL,
-          brand: PlainFacetDb.EQUAL,
-          color: ColorFilter,
-          size: PlainFacetDb.IN,
-          sleave: PlainFacetDb.EQUAL,
-          form: PlainFacetDb.EQUAL,
-        })
+      filter: PlainFacetDb.DEFAULTFILTER({
+        type: PlainFacetDb.EQUAL,
+        brand: PlainFacetDb.EQUAL,
+        color: ColorFilter,
+        size: PlainFacetDb.IN,
+        sleave: PlainFacetDb.EQUAL,
+        form: PlainFacetDb.EQUAL,
+      }),
     });
   }
 }

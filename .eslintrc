@@ -1,20 +1,38 @@
 {
   "env": {
-    "jest/globals": true
+    "node": true,
+    "jest": true
   },
-  "extends": [
-    "eslint:recommended",
-    "airbnb-base"
-  ],
-  "plugins": [
-    "jest",
-    "babel"
-  ],
+  "extends": ["eslint:recommended", "airbnb"],
+  "plugins": ["node", "jest", "babel"],
   "parser": "babel-eslint",
   "rules": {
     "class-methods-use-this": "off",
-    "no-unused-vars":"off",
-    "max-len": 0,
-    "no-var":0
+    "valid-jsdoc": [
+      "error",
+      {
+        "requireReturn": true,
+        "requireReturnType": true,
+        "requireParamDescription": true,
+        "requireReturnDescription": false,
+        "prefer": {
+          "arg": "param",
+          "argument": "param",
+          "class": "constructor",
+          "return": "returns",
+          "virtual": "abstract"
+        }
+      }
+    ],
+    "require-jsdoc": [
+      "error",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true
+        }
+      }
+    ]
   }
 }

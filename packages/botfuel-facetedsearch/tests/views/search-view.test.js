@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// require('../../src/logger-manager').configure({ logger: 'botfuel'});
-
 const SearchView = require('../../src/views/search-view');
 const { BotTextMessage } = require('botfuel-dialog');
 
@@ -31,8 +29,7 @@ describe('SearchView', () => {
           },
           {
             matchedEntities: {},
-            missingEntities: { f1: {}, f2: {} },
-            extraData: { nextQuestionFacet: 'f1' },
+            missingEntities: new Map([['f1', {}], ['f2', {}]]),
           },
         )).toEqual([new BotTextMessage('Which f1?')]);
       });

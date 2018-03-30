@@ -25,25 +25,42 @@ const logger = Logger('PlainFacetDb');
 class PlainFacetDb extends FacetDb {
   /**
    * @constructor
-   * @param {Object[]} data - the rows
-   * @param {Object} metadata - object providing the filter function, the done condition
+   * @param {Object[]} data - data
+   * @param {Object} metadata - object providing the filter function and the done condition
+   * Metadata must have filter and done function:
    * metadata = {
    *  filter: (query, row) => boolean
    *  done: (query) => boolean
    * }
+   * - The filter is used for to select rows from data.
+   * - The done function will specify if the current query is enough to return data to user
+   * i.e stop asking for more information. For example when returned data for that query
+   * have size < 3.
    */
   constructor(data, metadata) {
     super();
 
     logger.debug('constructor');
     this.data = data;
-    this.metadata = metadata; // filter, done
+    this.metadata = metadata;
   }
+  /* eslint-disable require-jsdoc */
+  static EQUAL(value, param) {
+    return value === param;
+  }
+  static IN(value, param) {
+    return param && param.includes(value);
+  }
+  static BETWEEN(value, param) {
+    return param && value >= param[0] && value <= param[1];
+  }
+  /* eslint-enable require-jsdoc */
 
-  static EQUAL(value, param) { return value === param; }
-  static IN(value, param) { return param && param.includes(value); }
-  static BETWEEN(value, param) { return param && value >= param[0] && value <= param[1]; }
-
+  /**
+   * Default filter that check condition on each facet in the query separately
+   * @param {Object} facetFilters filters for each factet. Example: PlainFacetDb.EQUAL
+   * @returns {Function} the filter function
+   */
   static DEFAULTFILTER(facetFilters) {
     return (query, row) => {
       let result = true;
@@ -76,7 +93,7 @@ class PlainFacetDb extends FacetDb {
 
   /**
    * Returns a boolean indicating if the search is done.
-   * @param {Object[]} hits - the hits, defaults to the entire db
+   * @param {Object[]} query - the current query
    * @returns {boolean}
    */
   done(query = {}) {
@@ -103,9 +120,6 @@ class PlainFacetDb extends FacetDb {
   getFacetValueCounts(facets, query) {
     logger.debug('getFacetValueCounts', facets);
     const hits = this.getHits(query);
-
-    // normalization for array value type with IN critera
-    // example: size = [S,M,L] ==> denormalization will return 3 hits
 
     const result = facets.reduce((map, facet) => {
       const valueHits = _.groupBy(hits, row => row[facet]);

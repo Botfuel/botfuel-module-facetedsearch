@@ -19,20 +19,21 @@ const { Logger, PromptDialog } = require('botfuel-dialog');
 
 const logger = Logger('SearchDialog');
 /**
- * @extends PromptDialog
+ * @extends SearchDialog
  */
 class SearchDialog extends PromptDialog {
+  /** @inheritDoc */
   constructor(config, brain, parameters) {
     logger.debug('constructor');
     super(config, brain, parameters);
     this.db = parameters.db;
     this.query = {};
-    this.nextQuestionFacet = null;
   }
 
   /**
    * Tranlate matched entities into query to get hits corresponding to matched entities
-   * @param {Object} matchedEntities
+   * @param {Object} matchedEntities matched entites returned from PromptDialog
+   * @returns {Object} query
    */
   buildQueryFromMatchedEntities(matchedEntities) {
     // build query from matched entities
@@ -47,82 +48,65 @@ class SearchDialog extends PromptDialog {
     return query;
   }
 
-  /** @inheritDoc */
-  computeEntities(
-    candidates,
-    parameters,
-    previouslyMatchedEntities = {},
-  ) {
-    let { matchedEntities, missingEntities } = super.computeEntities( // eslint-disable-line prefer-const
-      candidates,
-      parameters,
-      previouslyMatchedEntities,
+  /**
+   * Compute question entities to be sent to the view
+   * Missing entities with priority > 0 are put first, then comes the one computed by the strategy
+   * @param {Object} matchedEntities matched entites returned from PromptDialog
+   * @param {Object} missingEntities missing entites returned from PromptDialog
+   * @returns {Map} quetion entities (in sorted order)
+   */
+  async computeQuestionEntities(matchedEntities, missingEntities) {
+    this.query = this.buildQueryFromMatchedEntities(matchedEntities);
+    const facets = Object.keys(missingEntities);
+    const deducedFacets = this.db.getDeducedFacets(facets, this.query);
+    const reducedMissingEntities = _.omit(missingEntities, deducedFacets);
+
+    if (Object.keys(reducedMissingEntities).length === 0) {
+      return new Map();
+    }
+
+    const { facet } = this.db.selectFacetMinMaxStrategy(
+      Object.keys(reducedMissingEntities),
+      this.query,
     );
 
-    const query = this.buildQueryFromMatchedEntities(matchedEntities);
-    this.query = query;
-    const facets = Object.keys(missingEntities);
-    const deducedFacets = this.db.getDeducedFacets(facets, query);
-    missingEntities = _.omit(missingEntities, deducedFacets);
-    logger.debug('computeEntities: result', {
-      matchedEntities,
-      missingEntities,
+    // Missing entities with priority > 0 are put first, then comes the one computed by the strategy
+    const sortedEntityNames = Object.keys(reducedMissingEntities).sort((a, b) => {
+      const entityA = missingEntities[a];
+      const entityB = missingEntities[b];
+
+      if (entityA.priority === entityB.priority && facet) {
+        if (facet === a) {
+          return 0;
+        }
+
+        if (facet === b) {
+          return 1;
+        }
+      }
+
+      return entityB.priority - entityA.priority;
     });
 
-    this.nextQuestionFacet = this.computeNextQuestionFacet(
-      matchedEntities,
-      missingEntities,
-      parameters,
-    );
-
-    return { matchedEntities, missingEntities };
+    return new Map(sortedEntityNames.map(key => [key, reducedMissingEntities[key]]));
   }
 
   /**
-   * Compute the facet which should to be asked based on the current query
-   * - if there are missing entity with priority > 0 ==> prioritize this
-   * - otherwise return facet based on strategy
+   * @inheritDoc
+   * Example of dialogWillDisplay that computes the final data (if no more question)
+   * or the question facet possible values for user to choose.
    */
-  computeNextQuestionFacet(matchedEntities, missingEntities, parameters) {
-    const missingEntityNames = Object.keys(missingEntities);
-    if (missingEntityNames.length === 0) {
-      return null;
-    }
-
-    const { facet, valueCounts } = this.db.selectFacetMinMaxStrategy(
-      missingEntityNames,
-      this.query,
-    ) || { facet: undefined, count: undefined };
-
-    const highPriorityMissingEntites = missingEntityNames.filter(key => missingEntities[key].priority && missingEntities[key].priority > 0);
-    const nextQuestionFacet = highPriorityMissingEntites.length > 0 ? highPriorityMissingEntites[0] : facet;
-    logger.debug('computeNextQuestionFacet:', nextQuestionFacet);
-    return nextQuestionFacet;
-  }
-
-  /**
-   * Compute the next question facet (enitity to be asked) if there is any
-   * Otherwise return the data corresponding to user input (query)
-   * return: {Object} extra data to be passed to SearchView
-   */
-
-  async dialogWillDisplay(userMessage, dialogData) {
+  async dialogWillDisplay(userMessage, { missingEntities }) {
     logger.debug('dialogWillDisplay');
-    const { nextQuestionFacet } = this;
-    const userId = userMessage.user;
 
-    if (!nextQuestionFacet) {
-      const foundData = this.db.getHits(this.query);
-      return { nextQuestionFacet, foundData };
+    if (missingEntities.size === 0) {
+      return { data: this.db.getHits(this.query) };
     }
-
     // return next facet and all the value-counts for that facet
     // search view can show available values as a guide for user
+    const facet = missingEntities.keys().next().value;
     return {
-      nextQuestionFacet,
-      valueCounts: this.db.getFacetValueCounts([nextQuestionFacet], this.query)[
-        nextQuestionFacet
-      ],
+      facetValueCounts: this.db.getFacetValueCounts([facet], this.query)[facet],
     };
   }
 }

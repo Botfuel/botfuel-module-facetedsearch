@@ -32,9 +32,8 @@ const BRAIN_CONFIG = {
   },
 };
 
-
 describe('SearchDialog', () => {
-  describe('computeEntities', () => {
+  describe('computeQuestionEntities', () => {
     const brain = new MemoryBrain(BRAIN_CONFIG);
     const db = new PlainFacetDb(
       [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
@@ -51,54 +50,52 @@ describe('SearchDialog', () => {
       db,
     });
 
-    test('simple test', () => {
-      const f1Entity = {
-        dim: 'number',
-        values: [{ value: 1, type: 'integer' }],
-      };
-      const messageEntities = [f1Entity];
-      const expectedEntities = {
+    test('return no question entity when no need to ask more', async () => {
+      const matchedEntities = {
         f1: {
           dim: 'number',
+          values: [{ value: 1, type: 'integer' }],
         },
+      };
+      const missingEntities = {
         f2: {
           dim: 'number',
         },
       };
-      const { matchedEntities, missingEntities } = search.computeEntities(
-        messageEntities,
-        search.getParameters(expectedEntities),
-        {},
-      );
-      expect(matchedEntities).toHaveProperty('f1');
-      expect(matchedEntities.f1).toEqual(f1Entity);
-      expect(matchedEntities).toHaveProperty('f2');
-      expect(Object.keys(missingEntities)).toHaveLength(0);
-    });
 
-    test('next question facet', () => {
-      const messageEntities = [];
-      const expectedEntities = {
-        f1: {
-          dim: 'number',
-        },
-        f2: {
-          dim: 'number',
-        },
-      };
-      const { matchedEntities, missingEntities } = search.computeEntities(
-        messageEntities,
-        search.getParameters(expectedEntities),
+      const questionEntities = await search.computeQuestionEntities(
+        matchedEntities,
+        search.updateEntityWithDefaultValues(missingEntities),
         {},
+        'f1',
       );
 
-      expect(Object.keys(missingEntities)).toHaveLength(2);
-      expect(search.nextQuestionFacet).toBe('f1');
+      expect(questionEntities.size).toEqual(0);
     });
 
-    test('next question facet should return priotized entity', () => {
-      const messageEntities = [];
-      const expectedEntities = {
+    // test('next question facet', () => {
+    //   const messageEntities = [];
+    //   const expectedEntities = {
+    //     f1: {
+    //       dim: 'number',
+    //     },
+    //     f2: {
+    //       dim: 'number',
+    //     },
+    //   };
+    //   const { matchedEntities, missingEntities } = search.computeEntities(
+    //     messageEntities,
+    //     search.updateEntityWithDefaultValues(expectedEntities),
+    //     {},
+    //   );
+
+    //   expect(Object.keys(missingEntities)).toHaveLength(2);
+    //   expect(search.nextQuestionFacet).toBe('f1');
+    // });
+
+    test('questionEntities should ask priotized entity first', async () => {
+      const messageEntities = {};
+      const missingEntities = {
         f1: {
           dim: 'number',
         },
@@ -107,14 +104,14 @@ describe('SearchDialog', () => {
           priority: 1,
         },
       };
-      const { matchedEntities, missingEntities } = search.computeEntities(
+      const questionEntities = await search.computeQuestionEntities(
         messageEntities,
-        search.getParameters(expectedEntities),
+        search.updateEntityWithDefaultValues(missingEntities),
         {},
       );
 
-      expect(Object.keys(missingEntities)).toHaveLength(2);
-      expect(search.nextQuestionFacet).toBe('f2');
+      expect(questionEntities.size).toEqual(2);
+      expect(Array.from(questionEntities.keys())).toEqual(['f2', 'f1']);
     });
   });
 });

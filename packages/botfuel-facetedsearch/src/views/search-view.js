@@ -14,30 +14,22 @@
  * limitations under the License.
  */
 
-const { Logger, BotTextMessage, View } = require('botfuel-dialog');
+const { Logger, BotTextMessage, PromptView } = require('botfuel-dialog');
 
 const logger = Logger('SearchView');
 
 /**
  * Search dialog's view.
- * @extends View
+ * @extends PromptView
  */
-class SearchView extends View {
+class SearchView extends PromptView {
   /** @inheritDoc */
-  render(userMessage, { matchedEntities, missingEntities, extraData }) {
-    logger.debug('render', userMessage);
-    return this.renderEntities(matchedEntities, missingEntities, extraData);
-  }
-
-  /**
-   *
-   */
   renderEntities(matchedEntities, missingEntities, extraData) {
     logger.debug('renderEntities', matchedEntities, missingEntities, extraData);
     const messages = [];
 
-    if (Object.keys(missingEntities).length !== 0) {
-      messages.push(new BotTextMessage(`Which ${extraData.nextQuestionFacet}?`));
+    if (missingEntities.size > 0) {
+      messages.push(new BotTextMessage(`Which ${missingEntities.keys().next().value}?`));
     } else {
       messages.push(new BotTextMessage('Thank you. Here is your result:'));
     }

@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { BotTextMessage, BotImageMessage, Logger, QuickrepliesMessage } = require('botfuel-dialog');
+const { BotTextMessage, Logger, QuickrepliesMessage } = require('botfuel-dialog');
 const { SearchView } = require('botfuel-facetedsearch');
 
 const logger = Logger('ArticleView');
@@ -13,9 +13,9 @@ const questions = {
   sleave: 'What about sleave?',
 };
 
-const getBotResponse = ({ nextQuestionFacet, valueCounts }) => {
-  var facetValues = [];
-  if (nextQuestionFacet === 'size') {
+const getBotResponse = (facet, valueCounts) => {
+  let facetValues = [];
+  if (facet === 'size') {
     // size value is array
     const array = valueCounts.map(o => o.value.substring(1, o.value.length - 1).split(','));
     facetValues = _.union(...array);
@@ -23,14 +23,11 @@ const getBotResponse = ({ nextQuestionFacet, valueCounts }) => {
     facetValues = valueCounts.map(o => o.value);
   }
 
-  return [
-    new BotTextMessage(questions[nextQuestionFacet]),
-    new QuickrepliesMessage(facetValues),
-  ];
+  return [new BotTextMessage(questions[facet]), new QuickrepliesMessage(facetValues)];
 };
 
 const articleHtml = (data) => {
-  var html = '<div>';
+  let html = '<div>';
   html += `<div><img src="${data.image}" style="max-width:100%"/></div>`;
   html += `<div><strong>${data.brand}</strong> <strong style="float:right">${
     data.price
@@ -47,7 +44,9 @@ const articleHtml = (data) => {
   return html;
 };
 
+/** @inheritdoc */
 class ArticleView extends SearchView {
+  /** @inheritdoc */
   renderEntities(matchedEntities, missingEntities, extraData) {
     logger.debug('renderEntities', {
       matchedEntities,
@@ -55,19 +54,24 @@ class ArticleView extends SearchView {
       extraData,
     });
 
-    if (Object.keys(missingEntities).length !== 0) {
-      return getBotResponse(extraData);
+    if (missingEntities.size !== 0) {
+      return getBotResponse(missingEntities.values().next().value, extraData.facetValueCounts);
     }
 
     const messages = [];
-    if (extraData.foundData && extraData.foundData.length > 0) {
+    if (extraData.data && extraData.data.length > 0) {
       messages.push(
-        new BotTextMessage(`Thank you. We have ${extraData.foundData.length} product${extraData.foundData.length > 1 ? 's' : ''}:`));
-      _.forEach(extraData.foundData, (data) => {
+        new BotTextMessage(
+          `Thank you. We have ${extraData.data.length} product${
+            extraData.data.length > 1 ? 's' : ''
+          }:`,
+        ),
+      );
+      _.forEach(extraData.data, (data) => {
         messages.push(new BotTextMessage(articleHtml(data)));
       });
     } else {
-      messages.push(new BotTextMessage('Sorry we don\'t find any result!'));
+      messages.push(new BotTextMessage("Sorry we don't find any result!"));
     }
     return messages;
   }
