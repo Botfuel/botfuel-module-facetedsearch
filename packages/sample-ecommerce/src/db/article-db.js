@@ -25,4 +25,4 @@ class ArticleDb extends PlainFacetDb {
   }
 }
 
-module.exports = ArticleDb;
+module.exports = new ArticleDb();

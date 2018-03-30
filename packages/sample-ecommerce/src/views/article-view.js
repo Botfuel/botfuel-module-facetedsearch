@@ -44,9 +44,7 @@ const articleHtml = (data) => {
   return html;
 };
 
-/** @inheritdoc */
 class ArticleView extends SearchView {
-  /** @inheritdoc */
   renderEntities(matchedEntities, missingEntities, extraData) {
     logger.debug('renderEntities', {
       matchedEntities,
@@ -60,13 +58,9 @@ class ArticleView extends SearchView {
 
     const messages = [];
     if (extraData.data && extraData.data.length > 0) {
-      messages.push(
-        new BotTextMessage(
-          `Thank you. We have ${extraData.data.length} product${
-            extraData.data.length > 1 ? 's' : ''
-          }:`,
-        ),
-      );
+      messages.push(new BotTextMessage(`Thank you. We have ${extraData.data.length} product${
+        extraData.data.length > 1 ? 's' : ''
+      }:`));
       _.forEach(extraData.data, (data) => {
         messages.push(new BotTextMessage(articleHtml(data)));
       });

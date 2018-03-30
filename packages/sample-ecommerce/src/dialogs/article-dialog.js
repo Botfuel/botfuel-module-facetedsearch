@@ -5,7 +5,7 @@ class ArticleDialog extends SearchDialog {}
 
 ArticleDialog.params = {
   namespace: 'assurance',
-  db: new ArticleDb(),
+  db: ArticleDb,
   entities: {
     type: {
       dim: 'type',
