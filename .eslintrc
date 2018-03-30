@@ -3,7 +3,7 @@
     "node": true,
     "jest": true
   },
-  "extends": ["eslint:recommended", "airbnb"],
+  "extends": ["eslint:recommended", "airbnb-base"],
   "plugins": ["node", "jest", "babel"],
   "parser": "babel-eslint",
   "rules": {

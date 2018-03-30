@@ -12,8 +12,10 @@
     "style": "eslint src tests index.js",
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest"
   },
+  "peerDependencies": {
+    "botfuel-dialog": "4.x"
+  },
   "dependencies": {
-    "botfuel-dialog": "^4.0.0",
     "lodash": "^4.17.5"
   },
   "devDependencies": {
