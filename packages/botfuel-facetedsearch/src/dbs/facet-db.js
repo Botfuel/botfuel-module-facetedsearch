@@ -36,7 +36,7 @@ class FacetDb {
    * @param {Object[]} query - the current query for which we want facet information
    * @returns {boolean}
    */
-  done() {
+  async done() {
     throw new MissingImplementationError();
   }
 
@@ -47,7 +47,7 @@ class FacetDb {
    * @returns {Object} - an object mapping each facet to its cardinal
    *
    */
-  getFacetValueCardinal(facets, query) {
+  async getFacetValueCardinal(facets, query) {
     throw new MissingImplementationError();
   }
 
@@ -58,7 +58,7 @@ class FacetDb {
    * @returns {Object[]} - an object mapping each facet to an array of {value, count}
    *
    */
-  getFacetValueCounts(facets, query) {
+  async getFacetValueCounts(facets, query) {
     throw new MissingImplementationError();
   }
 
@@ -68,9 +68,9 @@ class FacetDb {
    * @param {Object[]} query - the current query for which we want facets information
    * @returns {String[]} the answered facets.
    */
-  getDeducedFacets(facets, query) {
+  async getDeducedFacets(facets, query) {
     logger.debug('getDeducedFacets:', facets);
-    const facetCardinals = this.getFacetValueCardinal(facets, query);
+    const facetCardinals = await this.getFacetValueCardinal(facets, query);
     return facets.filter(facet => facetCardinals[facet] <= 1);
   }
 
@@ -81,10 +81,10 @@ class FacetDb {
    * @param {Object[]} query - the current query for which we want facets information
    * @returns {String} the answered facet.
    */
-  selectFacetMinMaxStrategy(facets, query) {
+  async selectFacetMinMaxStrategy(facets, query) {
     logger.debug('selectFacetMinMaxStrategy', facets);
 
-    const facetValueCounts = this.getFacetValueCounts(facets, query);
+    const facetValueCounts = await this.getFacetValueCounts(facets, query);
 
     const facetMaxValueCounts = facets.reduce((obj, facet) => {
       obj.push({

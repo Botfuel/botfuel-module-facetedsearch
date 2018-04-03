@@ -71,12 +71,12 @@ class SearchDialog extends PromptDialog {
 
     this.query = this.buildQueryFromMatchedEntities(matchedEntities);
     // check done condition
-    if (this.db.done && this.db.done(this.query)) {
+    if (this.db.done && (await this.db.done(this.query))) {
       return { matchedEntities, missingEntities: new Map() };
     }
 
     const facets = Array.from(missingEntities.keys());
-    const deducedFacets = this.db.getDeducedFacets(facets, this.query);
+    const deducedFacets = await this.db.getDeducedFacets(facets, this.query);
     const reducedMissingEntities = new Map(missingEntities);
     _.forEach(deducedFacets, (facet) => {
       reducedMissingEntities.delete(facet);
@@ -86,7 +86,7 @@ class SearchDialog extends PromptDialog {
       return { matchedEntities, missingEntities: new Map() };
     }
 
-    const { facet } = this.db.selectFacetMinMaxStrategy(
+    const { facet } = await this.db.selectFacetMinMaxStrategy(
       Array.from(reducedMissingEntities.keys()),
       this.query,
     );
@@ -129,9 +129,8 @@ class SearchDialog extends PromptDialog {
     // return next facet and all the value-counts for that facet
     // search view can show available values as a guide for user
     const facet = missingEntities.keys().next().value;
-    return {
-      facetValueCounts: this.db.getFacetValueCounts([facet], this.query)[facet],
-    };
+    const facetValueCounts = (await this.db.getFacetValueCounts([facet], this.query))[facet];
+    return { facetValueCounts };
   }
 }
 

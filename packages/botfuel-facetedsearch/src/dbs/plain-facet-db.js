@@ -96,7 +96,7 @@ class PlainFacetDb extends FacetDb {
    * @param {Object[]} query - the current query
    * @returns {boolean}
    */
-  done(query = {}) {
+  async done(query = {}) {
     logger.debug('done', query);
     if (!this.metadata.done) {
       return false;
@@ -106,7 +106,7 @@ class PlainFacetDb extends FacetDb {
   }
 
   /** @inheritdoc */
-  getFacetValueCardinal(facets, query) {
+  async getFacetValueCardinal(facets, query) {
     logger.debug('getFacetValueCardinal', facets);
     const hits = this.getHits(query);
 
@@ -120,7 +120,7 @@ class PlainFacetDb extends FacetDb {
   }
 
   /** @inheritdoc */
-  getFacetValueCounts(facets, query) {
+  async getFacetValueCounts(facets, query) {
     logger.debug('getFacetValueCounts', facets);
     const hits = this.getHits(query);
 

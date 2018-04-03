@@ -20,12 +20,7 @@ describe('Facet Db', () => {
   describe('getHits', () => {
     test('should return the correct nb of hits', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 2, f2: 1 },
-          { f1: 3, f2: 2 },
-          { f1: 4, f2: 2 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
         {
           filter: PlainFacetDb.DEFAULTFILTER({
             f1: PlainFacetDb.EQUAL,
@@ -33,22 +28,14 @@ describe('Facet Db', () => {
           }),
         },
       );
-      expect(db.getHits({ f2: 2 })).toEqual([
-        { f1: 3, f2: 2 },
-        { f1: 4, f2: 2 },
-      ]);
+      expect(db.getHits({ f2: 2 })).toEqual([{ f1: 3, f2: 2 }, { f1: 4, f2: 2 }]);
     });
   });
 
   describe('done', () => {
     test('should return false when not done', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 2, f2: 1 },
-          { f1: 3, f2: 2 },
-          { f1: 4, f2: 2 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
         {
           done: hits => hits.length < 3,
           filter: PlainFacetDb.DEFAULTFILTER({
@@ -57,17 +44,12 @@ describe('Facet Db', () => {
           }),
         },
       );
-      expect(db.done({})).toBe(false);
+      expect(await db.done({})).toBe(false);
     });
 
     test('should return true when done', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 2, f2: 1 },
-          { f1: 3, f2: 2 },
-          { f1: 4, f2: 2 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
         {
           done: hits => hits.length < 3,
           filter: PlainFacetDb.DEFAULTFILTER({
@@ -76,19 +58,14 @@ describe('Facet Db', () => {
           }),
         },
       );
-      expect(db.done({ f2: 2 })).toBe(true);
+      expect(await db.done({ f2: 2 })).toBe(true);
     });
   });
 
   describe('getDeducedFacets', () => {
     test('should return the deduced facets when all db', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 2, f2: 1 },
-          { f1: 3, f2: 2 },
-          { f1: 4, f2: 2 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
         {
           filter: PlainFacetDb.DEFAULTFILTER({
             f1: PlainFacetDb.EQUAL,
@@ -96,17 +73,12 @@ describe('Facet Db', () => {
           }),
         },
       );
-      expect(db.getDeducedFacets(['f1', 'f2'], {})).toEqual([]);
+      expect(await db.getDeducedFacets(['f1', 'f2'], {})).toEqual([]);
     });
 
     test('should return the deduced facets', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 2, f2: 1 },
-          { f1: 3, f2: 2 },
-          { f1: 4, f2: 2 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
         {
           filter: PlainFacetDb.DEFAULTFILTER({
             f1: PlainFacetDb.EQUAL,
@@ -114,17 +86,12 @@ describe('Facet Db', () => {
           }),
         },
       );
-      expect(db.getDeducedFacets(['f1', 'f2'], { f2: 1 })).toEqual(['f2']);
+      expect(await db.getDeducedFacets(['f1', 'f2'], { f2: 1 })).toEqual(['f2']);
     });
 
     test('should return the deduced facets when no data', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 2, f2: 1 },
-          { f1: 3, f2: 2 },
-          { f1: 4, f2: 2 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
         {
           filter: PlainFacetDb.DEFAULTFILTER({
             f1: PlainFacetDb.EQUAL,
@@ -132,22 +99,14 @@ describe('Facet Db', () => {
           }),
         },
       );
-      expect(db.getDeducedFacets(['f1', 'f2'], { f2: 100 })).toEqual([
-        'f1',
-        'f2',
-      ]);
+      expect(await db.getDeducedFacets(['f1', 'f2'], { f2: 100 })).toEqual(['f1', 'f2']);
     });
   });
 
   describe('getFacetWithMinMaxHits', () => {
     test('should return the facet with max hits and correct count', async () => {
       const db = new PlainFacetDb(
-        [
-          { f1: 1, f2: 1 },
-          { f1: 1, f2: 2 },
-          { f1: 2, f2: 3 },
-          { f1: 2, f2: 4 },
-        ],
+        [{ f1: 1, f2: 1 }, { f1: 1, f2: 2 }, { f1: 2, f2: 3 }, { f1: 2, f2: 4 }],
         {
           filter: (query, row) => {
             if (query.f1 && query.f1 !== row.f1) {
@@ -161,7 +120,7 @@ describe('Facet Db', () => {
         },
       );
 
-      expect(db.selectFacetMinMaxStrategy(['f1', 'f2'], {})).toEqual({
+      expect(await db.selectFacetMinMaxStrategy(['f1', 'f2'], {})).toEqual({
         facet: 'f2',
         maxValueCount: 1,
       });

@@ -53,7 +53,7 @@ class ArticleView extends SearchView {
     });
 
     if (missingEntities.size !== 0) {
-      return getBotResponse(missingEntities.values().next().value, extraData.facetValueCounts);
+      return getBotResponse(missingEntities.keys().next().value, extraData.facetValueCounts);
     }
 
     const messages = [];
