@@ -96,4 +96,97 @@ describe('SearchDialog', () => {
       expect(Array.from(missingEntities.keys())).toEqual(['f2', 'f1']);
     });
   });
+
+  describe('computeEntites with done condition', () => {
+    const brain = new MemoryBrain(BRAIN_CONFIG);
+
+    test('return no missing entities when done', async () => {
+      const db = new PlainFacetDb(
+        [{ f1: 1, f2: 1 }, { f1: 1, f2: 2 }, { f1: 1, f2: 3 }, { f1: 2, f2: 2 }],
+        {
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
+          done: hits => hits.length <= 3,
+        },
+      );
+      const search = new SearchDialog(TEST_CONFIG, brain, {
+        namespace: 'testdialog',
+        entities: {},
+        db,
+      });
+
+      const candidates = [
+        {
+          dim: 'number',
+          values: [{ value: 1, type: 'integer' }],
+        },
+      ];
+
+      const dialogEntities = {
+        f1: {
+          dim: 'number',
+        },
+        f2: {
+          dim: 'number',
+        },
+      };
+
+      // suppose asking 'f1' question
+      const { missingEntities } = await search.computeEntities(
+        candidates,
+        dialogEntities,
+        {},
+        'f1',
+      );
+
+      expect(missingEntities.size).toEqual(0);
+    });
+
+    test('continue to ask for entities when not done', async () => {
+      const db = new PlainFacetDb(
+        [{ f1: 1, f2: 1 }, { f1: 1, f2: 2 }, { f1: 2, f2: 1 }, { f1: 2, f2: 2 }],
+        {
+          filter: PlainFacetDb.DEFAULTFILTER({
+            f1: PlainFacetDb.EQUAL,
+            f2: PlainFacetDb.EQUAL,
+          }),
+          done: hits => hits.length <= 1,
+        },
+      );
+      const search = new SearchDialog(TEST_CONFIG, brain, {
+        namespace: 'testdialog',
+        entities: {},
+        db,
+      });
+
+      const candidates = [
+        {
+          dim: 'number',
+          values: [{ value: 1, type: 'integer' }],
+        },
+      ];
+
+      const dialogEntities = {
+        f1: {
+          dim: 'number',
+        },
+        f2: {
+          dim: 'number',
+        },
+      };
+
+      // suppose asking 'f1' question
+      const { missingEntities } = await search.computeEntities(
+        candidates,
+        dialogEntities,
+        {},
+        'f1',
+      );
+
+      expect(missingEntities.size).toEqual(1);
+      expect(Array.from(missingEntities.keys())).toEqual(['f2']);
+    });
+  });
 });

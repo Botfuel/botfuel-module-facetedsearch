@@ -33,7 +33,7 @@ class FacetDb {
 
   /**
    * Returns a boolean indicating if the search is done.
-   * @param {Object[]} hits - the hits, defaults to the entire db
+   * @param {Object[]} query - the current query for which we want facet information
    * @returns {boolean}
    */
   done() {

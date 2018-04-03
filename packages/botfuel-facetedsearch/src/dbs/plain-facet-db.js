@@ -98,6 +98,9 @@ class PlainFacetDb extends FacetDb {
    */
   done(query = {}) {
     logger.debug('done', query);
+    if (!this.metadata.done) {
+      return false;
+    }
     const hits = this.getHits(query);
     return this.metadata.done(hits);
   }

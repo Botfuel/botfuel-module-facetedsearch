@@ -70,6 +70,11 @@ class SearchDialog extends PromptDialog {
     );
 
     this.query = this.buildQueryFromMatchedEntities(matchedEntities);
+    // check done condition
+    if (this.db.done && this.db.done(this.query)) {
+      return { matchedEntities, missingEntities: new Map() };
+    }
+
     const facets = Array.from(missingEntities.keys());
     const deducedFacets = this.db.getDeducedFacets(facets, this.query);
     const reducedMissingEntities = new Map(missingEntities);
