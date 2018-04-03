@@ -13,7 +13,7 @@
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest"
   },
   "peerDependencies": {
-    "botfuel-dialog": "4.x"
+    "botfuel-dialog": "5.x"
   },
   "dependencies": {
     "lodash": "^4.17.5"
