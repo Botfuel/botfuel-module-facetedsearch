@@ -26,14 +26,14 @@ class SearchView extends PromptView {
   /** @inheritDoc */
   renderEntities(matchedEntities, missingEntities, extraData) {
     logger.debug('renderEntities', matchedEntities, missingEntities, extraData);
-    const messages = [];
-
     if (missingEntities.size > 0) {
-      messages.push(new BotTextMessage(`Which ${missingEntities.keys().next().value}?`));
-    } else {
-      messages.push(new BotTextMessage('Thank you. Here is your result:'));
+      return [
+        new BotTextMessage(`Which ${missingEntities.keys().next().value}?`),
+      ];
     }
-    return messages;
+    return [
+      new BotTextMessage('Thank you. Here is your result:'),
+    ];
   }
 }
 

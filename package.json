@@ -10,6 +10,7 @@
   },
   "scripts": {
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
+    "style": "eslint src; eslint tests",
     "release": "yarn test && yarn publish --conventional-commits --changelog-preset=angular"
   },
   "peerDependencies": {
@@ -30,6 +31,7 @@
     "eslint-plugin-babel": "^4.1.2",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jest": "^21.13.0",
+    "eslint-plugin-node": "^5.1.0",
     "jest": "^22.4.2"
   },
   "engines": {

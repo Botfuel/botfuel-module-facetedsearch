@@ -120,10 +120,7 @@ describe('Facet Db', () => {
         },
       );
 
-      expect(await db.selectFacetMinMaxStrategy(['f1', 'f2'], {})).toEqual({
-        facet: 'f2',
-        maxValueCount: 1,
-      });
+      expect(await db.selectFacetWithMinMaxStrategy(['f1', 'f2'], {})).toEqual('f2');
     });
   });
 });

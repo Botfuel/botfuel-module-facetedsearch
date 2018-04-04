@@ -3,8 +3,8 @@
     "node": true,
     "jest": true
   },
-  "extends": ["eslint:recommended", "airbnb-base"],
   "plugins": ["node", "jest", "babel"],
+  "extends": ["eslint:recommended", "airbnb-base"],
   "parser": "babel-eslint",
   "rules": {
     "class-methods-use-this": "off",

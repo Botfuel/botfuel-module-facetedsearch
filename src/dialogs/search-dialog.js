@@ -18,6 +18,7 @@ const _ = require('lodash');
 const { Logger, PromptDialog } = require('botfuel-dialog');
 
 const logger = Logger('SearchDialog');
+
 /**
  * @extends SearchDialog
  */
@@ -31,31 +32,21 @@ class SearchDialog extends PromptDialog {
   }
 
   /**
-   * Tranlate matched entities into query to get hits corresponding to matched entities
+   * Translate matched entities into query to get hits corresponding to matched entities.
    * @param {Object} matchedEntities matched entites returned from PromptDialog
    * @returns {Object} query
    */
   buildQueryFromMatchedEntities(matchedEntities) {
-    // build query from matched entities
-    const query = Object.keys(matchedEntities).reduce((obj, key) => {
+    return Object.keys(matchedEntities).reduce((obj, key) => {
       const entity = matchedEntities[key];
       if (entity && entity.values.length > 0 && entity.values[0].value !== undefined) {
         return Object.assign({ [key]: entity.values[0].value }, obj);
       }
       return obj;
     }, {});
-
-    return query;
   }
 
-  /**
-   * Computes matched and missing entities.
-   * @param {Array.<Object[]>} candidates - array of raw entities given by the extractor.
-   * @param {Object} dialogEntities - map of entities expected by the dialog: {
-   * @param {Object} previouslyMatchedEntities - previouslyMatchedEntities
-   * @param {String} previousQuestionEntity - previous question entity
-   * @returns {Object} object containing missingEntities and matchedEntities
-   */
+  /** @inheritDoc */
   async computeEntities(
     candidates,
     dialogEntities,
@@ -86,7 +77,7 @@ class SearchDialog extends PromptDialog {
       return { matchedEntities, missingEntities: new Map() };
     }
 
-    const { facet } = await this.db.selectFacetMinMaxStrategy(
+    const facet = await this.db.selectFacetWithMinMaxStrategy(
       Array.from(reducedMissingEntities.keys()),
       this.query,
     );
@@ -115,22 +106,21 @@ class SearchDialog extends PromptDialog {
     };
   }
 
-  /**
-   * @inheritDoc
-   * Example of dialogWillDisplay that computes the final data (if no more question)
-   * or the question facet possible values for user to choose.
-   */
+  /** @inheritDoc */
   async dialogWillDisplay(userMessage, { missingEntities }) {
     logger.debug('dialogWillDisplay');
-
     if (missingEntities.size === 0) {
-      return { data: this.db.getHits(this.query) };
+      return {
+        data: this.db.getHits(this.query),
+      };
     }
     // return next facet and all the value-counts for that facet
     // search view can show available values as a guide for user
     const facet = missingEntities.keys().next().value;
     const facetValueCounts = (await this.db.getFacetValueCounts([facet], this.query))[facet];
-    return { facetValueCounts };
+    return {
+      facetValueCounts,
+    };
   }
 }
 
