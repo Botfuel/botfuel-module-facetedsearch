@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { BotTextMessage, Logger, QuickrepliesMessage } = require('botfuel-dialog');
-const { SearchView } = require('botfuel-facetedsearch');
+const { SearchView } = require('botfuel-module-facetedsearch');
 
 const logger = Logger('ArticleView');
 

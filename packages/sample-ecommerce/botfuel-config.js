@@ -1,7 +1,13 @@
 module.exports = {
-  adapter: { name: 'botfuel' },
+  adapter: {
+    name: 'botfuel'
+  },
   logger: 'custom-logger',
-  brain: { name: 'memory' },
-  modules: ['botfuel-facetedsearch'],
+  brain: {
+    name: 'memory'
+  },
+  modules: [
+    'botfuel-module-facetedsearch'
+  ],
   path: __dirname,
 };

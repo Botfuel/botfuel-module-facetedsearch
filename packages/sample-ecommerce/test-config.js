@@ -3,6 +3,6 @@ module.exports = {
     name: 'test',
   },
   logger: 'error',
-  modules: ['botfuel-facetedsearch'],
+  modules: ['botfuel-module-facetedsearch'],
   path: __dirname,
 };

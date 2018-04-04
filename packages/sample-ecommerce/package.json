@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "botfuel-dialog": "^5.0.0",
-    "botfuel-facetedsearch": "^0.3.0",
+    "botfuel-module-facetedsearch": "^0.3.0",
     "lodash": "^4.17.5",
     "logtown-winston": "^1.0.0",
     "winston": "^2.4.1"

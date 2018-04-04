@@ -4,7 +4,7 @@
     "packages/*"
   ],
   "changelog": {
-    "repo": "botfuel-facetedsearch/botfuel-facetedsearch",
+    "repo": "botfuel-module-facetedsearch/botfuel-module-facetedsearch",
     "cacheDir": ".changelog"
   },
   "npmClient": "yarn",
