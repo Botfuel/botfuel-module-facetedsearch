@@ -20,30 +20,28 @@ const FacetDb = require('./facet-db');
 
 const logger = Logger('PlainFacetDb');
 /**
- * The in memory PlainFacetDb for faceted search
+ * An in-memory implementation of FacetDb.
  */
 class PlainFacetDb extends FacetDb {
   /**
    * @constructor
    * @param {Object[]} data - data
-   * @param {Object} metadata - object providing the filter function and the done condition
-   * Metadata must have filter and done function:
-   * metadata = {
+   * @param {Object} metadata - object providing the filter function and the done condition:
+   * {
    *  filter: (query, row) => boolean
    *  done: (query) => boolean
    * }
-   * - The filter is used for to select rows from data.
-   * - The done function will specify if the current query is enough to return data to user
-   * i.e stop asking for more information. For example when returned data for that query
-   * have size < 3.
+   * where:
+   * - filter is used for to select rows from data
+   * - done indicates if the search has returned a set of results which is small enough
    */
   constructor(data, metadata) {
-    super();
-
     logger.debug('constructor');
+    super();
     this.data = data;
     this.metadata = metadata;
   }
+
   /* eslint-disable require-jsdoc */
   static EQUAL(value, param) {
     return value === param;
@@ -57,8 +55,8 @@ class PlainFacetDb extends FacetDb {
   /* eslint-enable require-jsdoc */
 
   /**
-   * Default filter that check condition on each facet in the query separately
-   * @param {Object} facetFilters filters for each factet. Example: PlainFacetDb.EQUAL
+   * Checks that all conditions on each facet are met.
+   * @param {Object} facetFilters filters for each facet (example: PlainFacetDb.EQUAL)
    * @returns {Function} the filter function
    */
   static DEFAULTFILTER(facetFilters) {
@@ -83,11 +81,9 @@ class PlainFacetDb extends FacetDb {
    */
   getHits(query = {}) {
     logger.debug('getHits', query);
-
     if (query === undefined || query === {}) {
       return this.data;
     }
-
     return this.data.filter(row => this.metadata.filter(query, row));
   }
 
@@ -106,35 +102,30 @@ class PlainFacetDb extends FacetDb {
   }
 
   /** @inheritdoc */
-  async getFacetValueCardinal(facets, query) {
-    logger.debug('getFacetValueCardinal', facets);
+  async getValueCountByFacet(facets, query) {
+    logger.debug('getValueCountByFacet', facets);
     const hits = this.getHits(query);
-
     const result = facets.reduce((obj, facet) => {
       const values = _.without(_.uniq(hits.map(row => row[facet])), undefined);
       return Object.assign({ [facet]: values.length }, obj);
     }, {});
-
-    logger.debug('getFacetValueCardinal', result);
+    logger.debug('getValueCountByFacet', result);
     return result;
   }
 
   /** @inheritdoc */
-  async getFacetValueCounts(facets, query) {
-    logger.debug('getFacetValueCounts', facets);
+  async getValuesByFacet(facets, query) {
+    logger.debug('getValuesByFacet', facets);
     const hits = this.getHits(query);
-
     const result = facets.reduce((map, facet) => {
       const valueHits = _.groupBy(hits, row => row[facet]);
-
       const valueCounts = Object.keys(valueHits).reduce((arr, value) => {
         arr.push({ value, count: valueHits[value].length });
         return arr;
       }, []);
       return Object.assign({ [facet]: valueCounts }, map);
     }, {});
-
-    logger.debug('getFacetValueCounts:', result);
+    logger.debug('getValuesByFacet', result);
     return result;
   }
 }

@@ -21,80 +21,69 @@ const { Logger, MissingImplementationError } = require('botfuel-dialog');
 
 const logger = Logger('FacetDb');
 /**
- * The FacetDb Interface
+ * Abstract class for FacetDb.
  */
 class FacetDb {
   /**
-   * @constructor
-   */
-  constructor() {
-    logger.debug('constructor');
-  }
-
-  /**
    * Returns a boolean indicating if the search is done.
    * @param {Object[]} query - the current query for which we want facet information
-   * @returns {boolean}
+   * @returns {boolean} - a boolean indicating if the search is done
    */
   async done() {
     throw new MissingImplementationError();
   }
 
   /**
-   * In the data returned by query, count the number of different value for each facet
+   * In the data returned by query, counts the number of different values for each facet.
    * @param {String[]} facets - an array of facets we want to get the value count
    * @param {Object[]} query - the current query for which we want facet information
-   * @returns {Object} - an object mapping each facet to its cardinal
+   * @returns {Object} - an object mapping each facet to the count
    *
    */
-  async getFacetValueCardinal(facets, query) {
+  async getValueCountByFacet(facets, query) {
     throw new MissingImplementationError();
   }
 
   /**
-   * In the data returned by query, for each facet, count the number of row for each facet value
-   * @param {String[]} facets - an array of facets we want to get the value count
+   * In the data returned by query, for each facet, for each value, count the number of rows.
+   * @param {String[]} facets - an array of facets for which we want to get the value count
    * @param {Object[]} query - the current query for which we want facet information
    * @returns {Object[]} - an object mapping each facet to an array of {value, count}
    *
    */
-  async getFacetValueCounts(facets, query) {
+  async getValuesByFacet(facets, query) {
     throw new MissingImplementationError();
   }
 
   /**
-   * Returns the deduced facets (when facetCount = 0 or 1)
+   * Returns the deduced facets (when facetCount = 0 or 1).
    * @param {String[]} facets - an array of facets
-   * @param {Object[]} query - the current query for which we want facets information
-   * @returns {String[]} the answered facets.
+   * @param {Object[]} query - the current query for which we want facet information
+   * @returns {String[]} the answered facets
    */
   async getDeducedFacets(facets, query) {
     logger.debug('getDeducedFacets:', facets);
-    const facetCardinals = await this.getFacetValueCardinal(facets, query);
+    const facetCardinals = await this.getValueCountByFacet(facets, query);
     return facets.filter(facet => facetCardinals[facet] <= 1);
   }
 
   /**
-   * MinMax strategy to get next question
-   * Get the facet which has the minimal possible hits size if query on it.
+   * Selects the next question applying MinMax strategy (optimizing the worst case).
    * @param {String[]} facets - an array of facets
-   * @param {Object[]} query - the current query for which we want facets information
-   * @returns {String} the answered facet.
+   * @param {Object[]} query - the current query for which we want facet information
+   * @returns {String} the answered facet
    */
-  async selectFacetMinMaxStrategy(facets, query) {
+  async selectFacetWithMinMaxStrategy(facets, query) {
     logger.debug('selectFacetMinMaxStrategy', facets);
-
-    const facetValueCounts = await this.getFacetValueCounts(facets, query);
-
-    const facetMaxValueCounts = facets.reduce((obj, facet) => {
+    const values = await this.getValuesByFacet(facets, query);
+    const facetCounts = facets.reduce((obj, facet) => {
       obj.push({
         facet,
-        maxValueCount: _.maxBy(facetValueCounts[facet], 'count').count,
+        count: _.maxBy(values[facet], 'count').count,
       });
       return obj;
     }, []);
-
-    return _.minBy(facetMaxValueCounts, 'maxValueCount');
+    return _.minBy(facetCounts, 'count').facet;
   }
 }
 
