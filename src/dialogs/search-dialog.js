@@ -117,7 +117,7 @@ class SearchDialog extends PromptDialog {
     // return next facet and all the value-counts for that facet
     // search view can show available values as a guide for user
     const facet = missingEntities.keys().next().value;
-    const facetValueCounts = (await this.db.getFacetValueCounts([facet], this.query))[facet];
+    const facetValueCounts = (await this.db.getValuesByFacet([facet], this.query))[facet];
     return {
       facetValueCounts,
     };

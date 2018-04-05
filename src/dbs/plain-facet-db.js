@@ -115,7 +115,7 @@ class PlainFacetDb extends FacetDb {
 
   /** @inheritdoc */
   async getValuesByFacet(facets, query) {
-    logger.debug('getValuessByFacet', facets);
+    logger.debug('getValuesByFacet', facets);
     const hits = this.getHits(query);
     const result = facets.reduce((map, facet) => {
       const valueHits = _.groupBy(hits, row => row[facet]);
