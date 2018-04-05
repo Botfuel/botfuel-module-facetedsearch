@@ -3,9 +3,9 @@
 Dialog and view for **Faceted Search**.
 The dialog is dynamically optimized and is generated from the data, usually a database.
 
-* [documentation]
-* [demo bot]
-* [demo bot source code]
+* [documentation](https://docs.botfuel.io/dialog/reference/modules/faceted-search/)
+* [demo bot](https://docs.botfuel.io/dialog/demos/faceted-search)
+* [demo bot source code](https://github.com/Botfuel/botfuel-sample-facetedsearch)
 
 ## How to use the module in your bot
 
