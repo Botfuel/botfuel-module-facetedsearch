@@ -110,8 +110,9 @@ class SearchDialog extends PromptDialog {
   async dialogWillDisplay(userMessage, { missingEntities }) {
     logger.debug('dialogWillDisplay');
     if (missingEntities.size === 0) {
+      const data = await this.db.getHits(this.query);
       return {
-        data: this.db.getHits(this.query),
+        data,
       };
     }
     // return next facet and all the value-counts for that facet

@@ -186,4 +186,63 @@ describe('SearchDialog', () => {
       expect(Array.from(missingEntities.keys())).toEqual(['f2']);
     });
   });
+
+  describe('dialogWillDisplay', () => {
+    const brain = new MemoryBrain(CONFIG);
+
+    const db = new PlainFacetDb(
+      [{ f1: 1, f2: 1 }, { f1: 1, f2: 2 }, { f1: 1, f2: 3 }, { f1: 2, f2: 2 }],
+      {
+        filter: PlainFacetDb.DEFAULTFILTER({
+          f1: PlainFacetDb.EQUAL,
+          f2: PlainFacetDb.EQUAL,
+        }),
+        done: hits => hits.length <= 1,
+      },
+    );
+    const search = new SearchDialog(CONFIG, brain, {
+      namespace: 'testdialog',
+      entities: {},
+      db,
+    });
+
+    const dialogEntities = {
+      f1: {
+        dim: 'number',
+      },
+      f2: {
+        dim: 'number',
+      },
+    };
+
+    test('return extraData with facetValueCounts when missingEntities is not empty', async () => {
+      const candidates = [];
+      const { missingEntities } = await search.computeEntities(candidates, dialogEntities, {});
+
+      const extraData = await search.dialogWillDisplay({}, { missingEntities });
+
+      expect(missingEntities.size).toEqual(2);
+      expect(extraData).toHaveProperty('facetValueCounts');
+      expect(extraData.facetValueCounts).toEqual([
+        { value: '1', count: 3 },
+        { value: '2', count: 1 },
+      ]);
+    });
+
+    test('return extraData with data when done', async () => {
+      const candidates = [
+        {
+          dim: 'number',
+          values: [{ value: 2, type: 'integer' }],
+        },
+      ];
+      const { missingEntities } = await search.computeEntities(candidates, dialogEntities, {});
+
+      const extraData = await search.dialogWillDisplay({}, { missingEntities });
+
+      expect(missingEntities.size).toEqual(0);
+      expect(extraData).toHaveProperty('data');
+      expect(extraData.data).toEqual([{ f1: 2, f2: 2 }]);
+    });
+  });
 });

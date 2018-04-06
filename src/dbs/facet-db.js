@@ -34,6 +34,15 @@ class FacetDb {
   }
 
   /**
+   * Returns the hits (rows) corresponding to a query.
+   * @param {Object} query - an object mapping facet names to values
+   * @returns {Object[]} the hits
+   */
+  async getHits(query = {}) {
+    throw new MissingImplementationError();
+  }
+
+  /**
    * In the data returned by query, counts the number of different values for each facet.
    * @param {String[]} facets - an array of facets we want to get the value count
    * @param {Object[]} query - the current query for which we want facet information
