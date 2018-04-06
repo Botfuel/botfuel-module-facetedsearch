@@ -9,7 +9,7 @@
     "url": "https://github.com/Botfuel/botfuel-module-facetedsearch"
   },
   "scripts": {
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest --forceExit",
     "style": "eslint src; eslint tests",
     "release": "yarn test && yarn publish --conventional-commits --changelog-preset=angular"
   },
@@ -17,7 +17,8 @@
     "botfuel-dialog": "5.x"
   },
   "dependencies": {
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.5",
+    "mongodb": "^3.0.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
