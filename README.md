@@ -1,6 +1,11 @@
 # Faceted Search module
 
-This module provides a dialog and a view for **faceted search**:
+The **Faceted Search** module provides:
+* a dialog
+* a view
+* an in-memory database
+
+## Resources
 * [Module documentation](http://docs.botfuel.io/dialog/modules/faceted-search)
 * [Demo Bot](http://docs.botfuel.io/dialog/demos/faceted-search)
 * [Code of demo bot](https://github.com/Botfuel/botfuel-sample-facetedsearch)
