@@ -1,8 +1,14 @@
 # Faceted Search module
 
-Dialog and view for **Faceted Search**.
-The dialog is dynamically optimized and is generated from the data, usually a database.
-
-* [FacetedSearch module documentation](http://docs.botfuel.io/dialog/modules/faceted-search)
+This module provides a dialog and a view for **faceted search**:
+* [Module documentation](http://docs.botfuel.io/dialog/modules/faceted-search)
 * [Demo Bot](http://docs.botfuel.io/dialog/demos/faceted-search)
-* [Sample using this module](https://github.com/Botfuel/botfuel-sample-facetedsearch)
+* [Code of demo bot](https://github.com/Botfuel/botfuel-sample-facetedsearch)
+
+## About modules
+
+See the [Modules Overview](http://docs.botfuel.io/dialog/modules/overview).
+
+## License
+
+See the [**License**](LICENSE.md) file.
