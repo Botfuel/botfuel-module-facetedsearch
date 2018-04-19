@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
-    "style": "eslint src; eslint tests",
+    "style": "eslint src && eslint tests",
     "release": "yarn test && yarn publish --conventional-commits --changelog-preset=angular"
   },
   "peerDependencies": {
