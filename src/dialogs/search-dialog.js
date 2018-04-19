@@ -24,9 +24,9 @@ const logger = Logger('SearchDialog');
  */
 class SearchDialog extends PromptDialog {
   /** @inheritDoc */
-  constructor(config, brain, parameters) {
+  constructor(bot, parameters) {
     logger.debug('constructor');
-    super(config, brain, parameters);
+    super(bot, parameters);
     this.db = parameters.db;
     this.query = {};
   }
