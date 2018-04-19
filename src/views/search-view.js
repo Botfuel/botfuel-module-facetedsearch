@@ -24,7 +24,7 @@ const logger = Logger('SearchView');
  */
 class SearchView extends PromptView {
   /** @inheritDoc */
-  renderEntities(matchedEntities, missingEntities, extraData) {
+  render(userMessage, { matchedEntities, missingEntities, extraData }) {
     logger.debug('renderEntities', matchedEntities, missingEntities, extraData);
     if (missingEntities.size > 0) {
       return [
