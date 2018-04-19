@@ -16,7 +16,7 @@
 
 const SearchDialog = require('../../src/dialogs/search-dialog');
 const PlainFacetDb = require('../../src/dbs/plain-facet-db');
-const { MemoryBrain } = require('botfuel-dialog');
+const { Bot } = require('botfuel-dialog');
 const path = require('path');
 
 const CONFIG = {
@@ -31,7 +31,7 @@ const CONFIG = {
 
 describe('SearchDialog', () => {
   describe('computeEntities', () => {
-    const brain = new MemoryBrain(CONFIG);
+    const bot = new Bot(CONFIG);
     const db = new PlainFacetDb(
       [{ f1: 1, f2: 1 }, { f1: 2, f2: 1 }, { f1: 3, f2: 2 }, { f1: 4, f2: 2 }],
       {
@@ -41,7 +41,7 @@ describe('SearchDialog', () => {
         }),
       },
     );
-    const search = new SearchDialog(CONFIG, brain, {
+    const search = new SearchDialog(bot, {
       namespace: 'testdialog',
       entities: {},
       db,
@@ -95,7 +95,7 @@ describe('SearchDialog', () => {
   });
 
   describe('computeEntites with done condition', () => {
-    const brain = new MemoryBrain(CONFIG);
+    const bot = new Bot(CONFIG);
 
     test('return no missing entities when done', async () => {
       const db = new PlainFacetDb(
@@ -108,7 +108,7 @@ describe('SearchDialog', () => {
           done: hits => hits.length <= 3,
         },
       );
-      const search = new SearchDialog(CONFIG, brain, {
+      const search = new SearchDialog(bot, {
         namespace: 'testdialog',
         entities: {},
         db,
@@ -152,7 +152,7 @@ describe('SearchDialog', () => {
           done: hits => hits.length <= 1,
         },
       );
-      const search = new SearchDialog(CONFIG, brain, {
+      const search = new SearchDialog(bot, {
         namespace: 'testdialog',
         entities: {},
         db,

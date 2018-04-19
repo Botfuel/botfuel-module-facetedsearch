@@ -1,3 +1,12 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/Botfuel/botfuel-module-facetedsearch/compare/v2.0.0...v3.0.0) (2018-04-19)
+
+
+### BREAKING CHANGE
+
+* update for SDK 7 ([4](https://github.com/Botfuel/botfuel-module-facetedsearch/pull/4)), for more information see: https://github.com/Botfuel/botfuel-dialog/blob/master/CHANGELOG.md#700-2018-04-17
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/Botfuel/botfuel-module-facetedsearch/compare/v1.0.0...v2.0.0) (2018-04-19)
 
