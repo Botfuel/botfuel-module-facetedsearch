@@ -1,3 +1,11 @@
+<a name="3.0.1"></a>
+# [3.0.1](https://github.com/Botfuel/botfuel-module-facetedsearch/compare/v3.0.0...v3.0.1) (2018-04-19)
+
+
+### Chore
+
+* added continuous integration tests ([6](https://github.com/Botfuel/botfuel-module-facetedsearch/pull/6))
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/Botfuel/botfuel-module-facetedsearch/compare/v2.0.0...v3.0.0) (2018-04-19)
 
