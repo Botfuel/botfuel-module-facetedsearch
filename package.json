@@ -1,6 +1,6 @@
 {
   "name": "botfuel-module-facetedsearch",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "sysadmin@botfuel.io",
   "description": "Faceted Search module for Botfuel Dialog",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
-    "style": "eslint src; eslint tests",
+    "style": "eslint src && eslint tests",
     "release": "yarn test && yarn publish --conventional-commits --changelog-preset=angular"
   },
   "peerDependencies": {
