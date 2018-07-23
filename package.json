@@ -9,12 +9,12 @@
     "url": "https://github.com/Botfuel/botfuel-module-facetedsearch"
   },
   "scripts": {
-    "test": "BOTFUEL_APP_TOKEN=TEST_BOT jest",
+    "test": "BOTFUEL_APP_TOKEN=TEST_BOT BOTFUEL_APP_ID=test BOTFUEL_APP_KEY=test jest",
     "style": "eslint src && eslint tests",
     "release": "yarn test && yarn publish --conventional-commits --changelog-preset=angular"
   },
   "peerDependencies": {
-    "botfuel-dialog": "7.x"
+    "botfuel-dialog": ">=7.0.0"
   },
   "dependencies": {
     "lodash": "^4.17.5"
@@ -25,7 +25,7 @@
     "babel-jest": "^22.4.3",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
-    "botfuel-dialog": "7.x",
+    "botfuel-dialog": ">=7.0.0",
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-babel": "^4.1.2",
