@@ -1,6 +1,6 @@
 {
   "name": "botfuel-module-facetedsearch",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "author": "sysadmin@botfuel.io",
   "description": "Faceted Search module for Botfuel Dialog",
   "license": "Apache-2.0",
