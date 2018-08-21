@@ -1,6 +1,9 @@
-<a name="3.0.1"></a>
-# [3.0.1](https://github.com/Botfuel/botfuel-module-facetedsearch/compare/v3.0.0...v3.0.1) (2018-04-19)
+### Features
 
+* Passing the query to the metadata's done function
+
+<a name="3.2.1"></a>
+# [3.2.1](https://github.com/Botfuel/botfuel-module-facetedsearch/compare/v3.0.0...v3.2.1) (2018-08-21)
 
 ### Chore
 
