@@ -37,6 +37,7 @@ class SearchDialog extends PromptDialog {
    * @returns {Object} query
    */
   buildQueryFromMatchedEntities(matchedEntities) {
+    logger.debug('buildQueryFromMatchedEntities', { matchedEntities });
     return Object.keys(matchedEntities).reduce((obj, key) => {
       const entity = matchedEntities[key];
       if (entity && entity.values.length > 0 && entity.values[0].value !== undefined) {
@@ -53,6 +54,12 @@ class SearchDialog extends PromptDialog {
     previouslyMatchedEntities = {},
     previousQuestionEntity = undefined,
   ) {
+    logger.debug('computeEntities', {
+      candidates,
+      dialogEntities,
+      previouslyMatchedEntities,
+      previousQuestionEntity,
+    });
     const { matchedEntities, missingEntities } = await super.computeEntities(
       candidates,
       dialogEntities,
@@ -108,7 +115,7 @@ class SearchDialog extends PromptDialog {
 
   /** @inheritDoc */
   async dialogWillDisplay(userMessage, { missingEntities }) {
-    logger.debug('dialogWillDisplay');
+    logger.debug('dialogWillDisplay', { userMessage, missingEntities });
     if (missingEntities.size === 0) {
       return {
         data: this.db.getHits(this.query),

@@ -80,7 +80,7 @@ class PlainFacetDb extends FacetDb {
    * @returns {Object[]} the hits
    */
   getHits(query = {}) {
-    logger.debug('getHits', query);
+    logger.debug('getHits', { query });
     if (query === undefined || query === {}) {
       return this.data;
     }
@@ -93,7 +93,7 @@ class PlainFacetDb extends FacetDb {
    * @returns {boolean}
    */
   async done(query = {}) {
-    logger.debug('done', query);
+    logger.debug('done', { query });
     if (!this.metadata.done) {
       return false;
     }
@@ -103,19 +103,19 @@ class PlainFacetDb extends FacetDb {
 
   /** @inheritdoc */
   async getValueCountByFacet(facets, query) {
-    logger.debug('getValueCountByFacet', facets);
+    logger.debug('getValueCountByFacet', { facets, query });
     const hits = this.getHits(query);
     const result = facets.reduce((obj, facet) => {
       const values = _.without(_.uniq(hits.map(row => row[facet])), undefined);
       return Object.assign({ [facet]: values.length }, obj);
     }, {});
-    logger.debug('getValueCountByFacet', result);
+    logger.debug('getValueCountByFacet', { result });
     return result;
   }
 
   /** @inheritdoc */
   async getValuesByFacet(facets, query) {
-    logger.debug('getValuesByFacet', facets);
+    logger.debug('getValuesByFacet', { facets, query });
     const hits = this.getHits(query);
     const result = facets.reduce((map, facet) => {
       const valueHits = _.groupBy(hits, row => row[facet]);
@@ -125,7 +125,7 @@ class PlainFacetDb extends FacetDb {
       }, []);
       return Object.assign({ [facet]: valueCounts }, map);
     }, {});
-    logger.debug('getValuesByFacet', result);
+    logger.debug('getValuesByFacet', { result });
     return result;
   }
 }

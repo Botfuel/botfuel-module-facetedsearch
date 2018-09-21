@@ -62,7 +62,7 @@ class FacetDb {
    * @returns {String[]} the answered facets
    */
   async getDeducedFacets(facets, query) {
-    logger.debug('getDeducedFacets:', facets);
+    logger.debug('getDeducedFacets', { facets, query });
     const facetCardinals = await this.getValueCountByFacet(facets, query);
     return facets.filter(facet => facetCardinals[facet] <= 1);
   }
@@ -74,7 +74,7 @@ class FacetDb {
    * @returns {String} the answered facet
    */
   async selectFacetWithMinMaxStrategy(facets, query) {
-    logger.debug('selectFacetMinMaxStrategy', facets);
+    logger.debug('selectFacetMinMaxStrategy', { facets, query });
     const values = await this.getValuesByFacet(facets, query);
     const facetCounts = facets.reduce((obj, facet) => {
       obj.push({
